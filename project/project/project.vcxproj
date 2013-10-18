@@ -114,11 +114,17 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\BaseObject.h" />
+    <ClInclude Include="include\CollisionManager.h" />
     <ClInclude Include="include\BaseApplication.h" />
     <ClInclude Include="include\project.h" />
+    <ClInclude Include="include\MovingObject.h" />
     <ClInclude Include="res\Resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\BaseObject.cpp" />
+    <ClCompile Include="src\CollisionManager.cpp" />
+    <ClCompile Include="src\MovingObject.cpp" />
     <ClCompile Include="src\BaseApplication.cpp" />
     <ClCompile Include="src\project.cpp" />
   </ItemGroup>

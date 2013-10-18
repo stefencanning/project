@@ -30,23 +30,66 @@ project::~project(void)
 //-------------------------------------------------------------------------------------
 void project::createScene(void)
 {
-    Ogre::Entity* ogreHead = mSceneMgr->createEntity("Head", "ogrehead.mesh");
-    Ogre::Entity* ogreHead2 = mSceneMgr->createEntity("Head2", "ogrehead.mesh");
+    // Create the ground with grass on it
+ 	Ogre::Plane plane;
+    plane.normal = Ogre::Vector3::UNIT_Y;
+	// horizontal plane with normal up in y-direction
+   	plane.d = 0;//Plane passes through the origin i.e. plane at y = 0
+    Ogre::MeshManager::getSingleton().createPlane("floor",
+		Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane,
+		1000,1000,10,10,true,1,10,10,Ogre::Vector3::UNIT_Z);
+   	Ogre::Entity* pPlaneEnt = mSceneMgr->createEntity("plane", "floor");
+    pPlaneEnt->setMaterialName("Examples/GrassFloor");
+   	pPlaneEnt->setCastShadows(false);
+	Ogre::SceneNode* floorNode = mSceneMgr->createSceneNode("floor1");
+	mSceneMgr->getRootSceneNode()->addChild(floorNode);
+	floorNode->attachObject(pPlaneEnt);
 
-    Ogre::SceneNode* headNode = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-    headNode->attachObject(ogreHead);
-	headNode->setPosition(0,0,0);
+
 	
-    Ogre::SceneNode* headNode2 = mSceneMgr->getRootSceneNode()->createChildSceneNode();
-    headNode2->attachObject(ogreHead2);
-	headNode2->setPosition(1,0,0);
+	Ogre::Entity *cube = mSceneMgr->createEntity("cube", "cube.mesh");
+	cube->setMaterialName("Examples/RustySteel");
+	Ogre::SceneNode *cubeNode = mSceneMgr->createSceneNode("cubeNode");
+	mSceneMgr->getRootSceneNode()->addChild(cubeNode);
+	cubeNode->attachObject( cube );
+	cube->setCastShadows(true);
+	float cubeModelLength = 100;
+	float cubeLength = 4;
+	// Change size of graphics cube to that of cubeLength
+	double cubeScale = cubeLength/cubeModelLength;
+	cubeNode->scale(cubeScale, cubeScale, cubeScale);
+	// Position the cube to sit exactly on the ground
+	cubeNode-> setPosition(Ogre::Vector3(0, 500+ cubeLength/2,0));
+	vector<Ogre::Vector3> colPoints;
+	colPoints.push_back(Ogre::Vector3(-2,-2,-2));
+	colPoints.push_back(Ogre::Vector3(2,-2,-2));
+	colPoints.push_back(Ogre::Vector3(2,2,-2));
+	colPoints.push_back(Ogre::Vector3(2,-2,-2));
+	colPoints.push_back(Ogre::Vector3(2,-2,2));
+	colPoints.push_back(Ogre::Vector3(2,2,2));
+	colPoints.push_back(Ogre::Vector3(-2,2,2));
+	colPoints.push_back(Ogre::Vector3(-2,-2,2));
+	objects.push_back(new MovingObject(cubeNode,Ogre::Vector3(0,500+ cubeLength/2,0),colPoints,Ogre::Vector3(0,0,0)));
 
+	
+	Ogre::Entity *cube2 = mSceneMgr->createEntity("cube2", "cube.mesh");
+	cube->setMaterialName("Examples/RustySteel");
+	Ogre::SceneNode *cubeNode2 = mSceneMgr->createSceneNode("cubeNode2");
+	mSceneMgr->getRootSceneNode()->addChild(cubeNode2);
+	cubeNode2->attachObject( cube2 );
+	cube2->setCastShadows(true);
+	// Change size of graphics cube to that of cubeLength
+	cubeNode2->scale(cubeScale, cubeScale, cubeScale);
+	// Position the cube to sit exactly on the ground
+	cubeNode2-> setPosition(Ogre::Vector3(0, cubeLength/2,0));
+	objects.push_back(new BaseObject(cubeNode2,Ogre::Vector3(0,cubeLength/2,0),colPoints));
     // Set ambient light
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
 
     // Create a light
     Ogre::Light* l = mSceneMgr->createLight("MainLight");
     l->setPosition(20,80,50);
+	mCamera->setPosition(objects[0]->getNode()->getPosition().x, objects[0]->getNode()->getPosition().y + 50, objects[0]->getNode()->getPosition().z +100);
 }
 
 

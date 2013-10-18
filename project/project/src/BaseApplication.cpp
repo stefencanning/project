@@ -92,7 +92,7 @@ void BaseApplication::createCamera(void)
     mCamera = mSceneMgr->createCamera("PlayerCam");
 
     // Position it at 500 in Z direction
-    mCamera->setPosition(Ogre::Vector3(0,0,100));
+    mCamera->setPosition(Ogre::Vector3(0,20,100));
     // Look back along -Z
     mCamera->lookAt(Ogre::Vector3(0,0,0));
     mCamera->setNearClipDistance(5);
@@ -278,7 +278,29 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
             mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
         }
     }
+	int size = objects.size();
+	for(int i = 0; i < size; i++)
+	{
+		objects[i]->update(evt.timeSinceLastFrame);
+	}
+	CollisionManager::CheckCollision(objects[0],objects[1]);
 
+
+	if(mCamera->getPosition().y != objects[0]->getNode()->getPosition().y + 50)
+	{
+		if(mCamera->getPosition().y < objects[0]->getNode()->getPosition().y + 50)
+			mCamera->setPosition(mCamera->getPosition().x, mCamera->getPosition().y + 0.1, mCamera->getPosition().z);
+		else
+			mCamera->setPosition(mCamera->getPosition().x, mCamera->getPosition().y - 0.1, mCamera->getPosition().z);
+	}
+
+	mCamera->setPosition(objects[0]->getNode()->getPosition().x, mCamera->getPosition().y, objects[0]->getNode()->getPosition().z +100);
+	mCamera->lookAt(objects[0]->getNode()->getPosition());
+	/*
+	if(CollisionManager.CheckCollision(*objects[0],*objects[1]))
+	{
+	}
+	*/
     return true;
 }
 //-------------------------------------------------------------------------------------
