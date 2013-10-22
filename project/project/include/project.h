@@ -32,6 +32,7 @@ public:
 
 protected:
     virtual void createScene(void);
+	void CreatePlatform(Ogre::Vector3 position, Ogre::Vector3 scale);
 };
 
 #endif // #ifndef __project_h_

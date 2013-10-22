@@ -1,10 +1,10 @@
-﻿Build started 18/10/2013 10:29:34.
-     1>Project "I:\project\project\project.vcxproj" on node 2 (build target(s)).
+﻿Build started 22/10/2013 09:59:04.
+     1>Project "C:\Users\stefen\project\project\project\project.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "obj\Debug\project.unsuccessfulbuild" because "AlwaysCreate" was specified.
        ClCompile:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Iinclude /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\include" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\include\OIS" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\include\OGRE" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\Samples\Common\include" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\boost_1_44" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /Gy /fp:fast /Zc:wchar_t /Zc:forScope /GR /Fo"obj\Debug\\" /Fd"obj\Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\BaseApplication.cpp
-         BaseApplication.cpp
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Iinclude /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\include" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\include\OIS" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\include\OGRE" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\Samples\Common\include" /I"C:\Ogre SDK\OgreSDK_vc10_v1-7-3\boost_1_44" /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /Gy /fp:fast /Zc:wchar_t /Zc:forScope /GR /Fo"obj\Debug\\" /Fd"obj\Debug\vc100.pdb" /Gd /TP /analyze- /errorReport:prompt src\project.cpp
+         project.cpp
        ResourceCompile:
          All outputs are up-to-date.
        ManifestResourceCompile:
@@ -22,7 +22,7 @@
          All outputs are up-to-date.
        LinkEmbedManifest:
          All outputs are up-to-date.
-         project.vcxproj -> I:\project\project\bin\Debug\project.exe
+         project.vcxproj -> C:\Users\stefen\project\project\project\bin\Debug\project.exe
        PostBuildEvent:
          Description: Copying exe to samples bin directory ...
          copy "bin\Debug\\project.exe" "C:\Ogre SDK\OgreSDK_vc10_v1-7-3\Bin\Debug"
@@ -31,8 +31,8 @@
        FinalizeBuildStatus:
          Deleting file "obj\Debug\project.unsuccessfulbuild".
          Touching "obj\Debug\project.lastbuildstate".
-     1>Done Building Project "I:\project\project\project.vcxproj" (build target(s)).
+     1>Done Building Project "C:\Users\stefen\project\project\project\project.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:24.81
+Time Elapsed 00:00:08.19
