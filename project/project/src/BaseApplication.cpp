@@ -243,9 +243,9 @@ bool BaseApplication::setup(void)
     loadResources();
 
     // Create the scene
+    createFrameListener();
     createScene();
 
-    createFrameListener();
     
 	return true;
 };
@@ -283,7 +283,11 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	{
 		objects[i]->update(evt.timeSinceLastFrame);
 	}
-	CollisionManager::CheckCollision(objects[0],objects[1]);
+	for(int i = 1; i < size;i++)
+	{
+		CollisionManager::CheckCollision(objects[0],objects[i]);
+	}
+	//CollisionManager::CheckCollision(objects[0],objects[1]);
 
 
 	if(mCamera->getPosition().y != objects[0]->getNode()->getPosition().y + 50)
@@ -307,7 +311,7 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
 {
     if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
-
+	
     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
     {
         mTrayMgr->toggleAdvancedFrameStats();

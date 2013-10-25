@@ -45,8 +45,8 @@ void project::createScene(void)
 	mSceneMgr->getRootSceneNode()->addChild(floorNode);
 	floorNode->attachObject(pPlaneEnt);
 
-
-	
+	CreatePlayer(Ogre::Vector3(0,5,0),Ogre::Vector3(4,4,4));
+	/*
 	Ogre::Entity *cube = mSceneMgr->createEntity("cube", "cube.mesh");
 	cube->setMaterialName("Examples/RustySteel");
 	Ogre::SceneNode *cubeNode = mSceneMgr->createSceneNode("cubeNode");
@@ -70,9 +70,12 @@ void project::createScene(void)
 	colPoints.push_back(Ogre::Vector3(-2,2,2));
 	colPoints.push_back(Ogre::Vector3(-2,-2,2));
 	objects.push_back(new MovingObject(cubeNode,Ogre::Vector3(0,500+ cubeLength/2,0),colPoints,Ogre::Vector3(0,0,0)));
-
-	CreatePlatform(Ogre::Vector3(0,2,0),Ogre::Vector3(20,4,4));
-	CreatePlatform(Ogre::Vector3(24,10,0),Ogre::Vector3(20,4,4));
+	*/
+	CreatePlatform(Ogre::Vector3(0,2,0),Ogre::Vector3(20,4,10));
+	CreatePlatform(Ogre::Vector3(24,10,0),Ogre::Vector3(20,4,10));
+	CreatePlatform(Ogre::Vector3(40,20,0),Ogre::Vector3(20,4,10));
+	CreatePlatform(Ogre::Vector3(64,10,0),Ogre::Vector3(20,4,10));
+	CreatePlatform(Ogre::Vector3(80,15,0),Ogre::Vector3(20,4,4));
 	/*
 	Ogre::Entity *cube2 = mSceneMgr->createEntity("cube2", "cube.mesh");
 	cube->setMaterialName("Examples/RustySteel");
@@ -105,7 +108,7 @@ void project::createScene(void)
 
     // Create a light
     Ogre::Light* l = mSceneMgr->createLight("MainLight");
-    l->setPosition(20,80,50);
+    l->setPosition(0,80,0);
 	mCamera->setPosition(objects[0]->getNode()->getPosition().x, objects[0]->getNode()->getPosition().y + 50, objects[0]->getNode()->getPosition().z +100);
 }
 
@@ -134,6 +137,30 @@ void project::CreatePlatform(Ogre::Vector3 position, Ogre::Vector3 scale)
 	objects.push_back(new BaseObject(cubeNode,Ogre::Vector3(position),colPoints));
 }
 
+
+void project::CreatePlayer(Ogre::Vector3 position, Ogre::Vector3 scale)
+{
+	Ogre::Entity *sphere = mSceneMgr->createEntity("sphere", "geosphere8000.mesh");
+	sphere->setMaterialName("Examples/Chrome");
+	Ogre::SceneNode *sphereNode = mSceneMgr->createSceneNode("sphereNode");
+	mSceneMgr->getRootSceneNode()->addChild(sphereNode);
+	sphereNode->attachObject(sphere);
+	sphere->setCastShadows(true);
+	float sphereModelDiameter = 500;
+	sphereNode->scale(scale.x/sphereModelDiameter,scale.y/sphereModelDiameter,scale.z/sphereModelDiameter);
+	//Sit sphere on ground
+	sphereNode->setPosition(position);
+	vector<Ogre::Vector3> colPoints;
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,scale.z/2));
+	objects.push_back(new Player(sphereNode,Ogre::Vector3(position),colPoints,Ogre::Vector3(0,0,0),mKeyboard));
+}
 
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
