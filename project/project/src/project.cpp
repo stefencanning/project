@@ -44,8 +44,15 @@ void project::createScene(void)
 	Ogre::SceneNode* floorNode = mSceneMgr->createSceneNode("floor1");
 	mSceneMgr->getRootSceneNode()->addChild(floorNode);
 	floorNode->attachObject(pPlaneEnt);
-
+	/*
+	while(objects.size()!=0)
+	{
+	delete(objects[0]);
+	}
+	objects.clear();
+	*/
 	CreatePlayer(Ogre::Vector3(0,5,0),Ogre::Vector3(4,4,4));
+	CreateEnemy(Ogre::Vector3(0,30,0),Ogre::Vector3(4,4,4));
 	/*
 	Ogre::Entity *cube = mSceneMgr->createEntity("cube", "cube.mesh");
 	cube->setMaterialName("Examples/RustySteel");
@@ -109,9 +116,37 @@ void project::createScene(void)
     // Create a light
     Ogre::Light* l = mSceneMgr->createLight("MainLight");
     l->setPosition(0,80,0);
-	mCamera->setPosition(objects[0]->getNode()->getPosition().x, objects[0]->getNode()->getPosition().y + 50, objects[0]->getNode()->getPosition().z +100);
+
+	
+	CreateGoal(Ogre::Vector3(120,10,0),Ogre::Vector3(10,30,10));
+
+	Camera::getCam()->Initiate(mCamera, objects[0]->getNode(), mKeyboard);
+	Camera::getCam()->setPosition(Ogre::Vector3(objects[0]->getNode()->getPosition().x, objects[0]->getNode()->getPosition().y + 50, objects[0]->getNode()->getPosition().z +100));
+
 }
 
+void project::CreateEnemy(Ogre::Vector3 position, Ogre::Vector3 scale){
+	Ogre::Entity *cube = mSceneMgr->createEntity("cube"+Ogre::StringConverter::toString(objects.size()),"cube.mesh");
+	cube->setMaterialName("Examples/rockwall");
+	Ogre::SceneNode *cubeNode = mSceneMgr->createSceneNode("object"+Ogre::StringConverter::toString(objects.size()));
+	mSceneMgr->getRootSceneNode()->addChild(cubeNode);
+	cubeNode->attachObject(cube);
+	cube->setCastShadows(true);
+	float cubeModelLength = 100;
+	cubeNode->scale(scale.x/cubeModelLength,scale.y/cubeModelLength,scale.z/cubeModelLength);
+
+	cubeNode->setPosition(position);
+	vector<Ogre::Vector3> colPoints;
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,scale.z/2));
+	objects.push_back(new Enemy(cubeNode,Ogre::Vector3(position),colPoints,Ogre::Vector3(0,0,0)));
+}
 
 void project::CreatePlatform(Ogre::Vector3 position, Ogre::Vector3 scale)
 {
@@ -127,14 +162,38 @@ void project::CreatePlatform(Ogre::Vector3 position, Ogre::Vector3 scale)
 	cubeNode-> setPosition(position);
 	vector<Ogre::Vector3> colPoints;
 	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,-scale.z/2));
-	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
-	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
 	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,-scale.z/2));
-	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
 	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,scale.z/2));
 	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
 	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,scale.z/2));
-	objects.push_back(new BaseObject(cubeNode,Ogre::Vector3(position),colPoints));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	objects.push_back(new BaseObject(cubeNode,Ogre::Vector3(position),colPoints,CONSTANT_VALUES::PLATFORM));
+}
+
+
+void project::CreateGoal(Ogre::Vector3 position, Ogre::Vector3 scale){
+	Ogre::Entity *cube = mSceneMgr->createEntity("cube"+Ogre::StringConverter::toString(objects.size()), "cube.mesh");
+	cube->setMaterialName("Examples/Chrome");
+	Ogre::SceneNode *cubeNode = mSceneMgr->createSceneNode("goal");
+	mSceneMgr->getRootSceneNode()->addChild(cubeNode);
+	cubeNode->attachObject(cube);
+	cube->setCastShadows(true);
+	float cubeModelLength = 100;
+	cubeNode->scale(scale.x/cubeModelLength, scale.y/cubeModelLength, scale.z/cubeModelLength);
+	// Position the cube to sit exactly on the ground
+	cubeNode-> setPosition(position);
+	vector<Ogre::Vector3> colPoints;
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	objects.push_back(new Goal(cubeNode,position,colPoints,Ogre::Vector3(0,5,0)));
 }
 
 
@@ -152,14 +211,16 @@ void project::CreatePlayer(Ogre::Vector3 position, Ogre::Vector3 scale)
 	sphereNode->setPosition(position);
 	vector<Ogre::Vector3> colPoints;
 	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,-scale.z/2));
-	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
-	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
 	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,-scale.z/2));
-	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,-scale.z/2));
 	colPoints.push_back(Ogre::Vector3(scale.x/2,scale.y/2,scale.z/2));
 	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,scale.z/2));
+	colPoints.push_back(Ogre::Vector3(scale.x/2,-scale.y/2,-scale.z/2));
 	colPoints.push_back(Ogre::Vector3(-scale.x/2,-scale.y/2,scale.z/2));
-	objects.push_back(new Player(sphereNode,Ogre::Vector3(position),colPoints,Ogre::Vector3(0,0,0),mKeyboard));
+	colPoints.push_back(Ogre::Vector3(-scale.x/2,scale.y/2,scale.z/2));
+	Player* p = Player::getPlayer();
+	p->Init(sphereNode,Ogre::Vector3(position),colPoints,Ogre::Vector3(0,0,0),mKeyboard);
+	objects.push_back(p);
 }
 
 

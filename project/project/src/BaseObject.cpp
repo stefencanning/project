@@ -1,11 +1,21 @@
 #include "BaseObject.h"
 
 
-BaseObject::BaseObject(Ogre::SceneNode* node,Ogre::Vector3 position, vector<Ogre::Vector3> collisionPoints)
+BaseObject::BaseObject(Ogre::SceneNode* node,Ogre::Vector3 position, vector<Ogre::Vector3> collisionPoints,int type)
 	:m_object(node),
 	m_position(position),
-	m_collisionPoints(collisionPoints)
+	m_collisionPoints(collisionPoints),
+	lastAxis(1,0,0),
+	m_type(type),
+	m_radius(0)
 {
+	for(int i = 0; i < m_collisionPoints.size(); i++)
+	{
+		if(m_collisionPoints[i].length() > m_radius)
+		{
+			m_radius=m_collisionPoints[i].length();
+		}
+	}
 }
 
 

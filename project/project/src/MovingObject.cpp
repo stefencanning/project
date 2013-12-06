@@ -1,8 +1,8 @@
 #include "MovingObject.h"
 
 
-MovingObject::MovingObject(Ogre::SceneNode* node,Ogre::Vector3 position, vector<Ogre::Vector3> collisionPoints, Ogre::Vector3 velocity)
-	:BaseObject(node,position,collisionPoints),m_velocity(velocity)
+MovingObject::MovingObject(Ogre::SceneNode* node,Ogre::Vector3 position, vector<Ogre::Vector3> collisionPoints, Ogre::Vector3 velocity, int type)
+	:BaseObject(node,position,collisionPoints,type),m_velocity(velocity)
 {
 }
 

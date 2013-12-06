@@ -283,23 +283,56 @@ bool BaseApplication::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	{
 		objects[i]->update(evt.timeSinceLastFrame);
 	}
-	for(int i = 1; i < size;i++)
+	for(int i = 0; i < size;i++)
 	{
-		CollisionManager::CheckCollision(objects[0],objects[i]);
+		for(int j = i; j < size; j++)
+		{
+			if(objects[i] != objects[j])
+			{
+				if(objects[i]->m_type != objects[j]->m_type)
+				{
+				if(sqrt(((objects[j]->getPosition().x - objects[i]->getPosition().x)*(objects[j]->getPosition().x - objects[i]->getPosition().x)) +
+					((objects[j]->getPosition().y - objects[i]->getPosition().y)*(objects[j]->getPosition().y - objects[i]->getPosition().y)) +
+					((objects[j]->getPosition().z - objects[i]->getPosition().z)*(objects[j]->getPosition().z - objects[i]->getPosition().z)) )
+					< sqrt((objects[j]->m_radius*objects[j]->m_radius)+(objects[i]->m_radius*objects[i]->m_radius)))
+					{
+						CollissionReturn colReturn = CollisionManager::CheckSAT(objects[j],objects[i]);
+						if(colReturn.m_boolean)
+						{
+							if(objects[i]->m_type == CONSTANT_VALUES::PLATFORM)
+							{
+							CollisionManager::CollissionMove((MovingObject*)objects[j],objects[i],colReturn);
+							}
+							else if(objects[j]->m_type == CONSTANT_VALUES::PLATFORM)
+							{
+								CollisionManager::CollissionMove((MovingObject*)objects[i],objects[j],colReturn);
+							}
+							else if(objects[j]->m_type == CONSTANT_VALUES::PLAYER && objects[i]->m_type == CONSTANT_VALUES::GOAL)
+							{
+								objects[j]->setPosition(((Goal*)objects[i])->getStart());
+								//createScene();
+							}
+							else if(objects[i]->m_type == CONSTANT_VALUES::PLAYER && objects[j]->m_type == CONSTANT_VALUES::GOAL)
+							{
+								objects[i]->setPosition(((Goal*)objects[j])->getStart());
+							}
+			/*
+			Ogre::Vector3 v((colReturn.m_axis.x*colReturn.m_distance),(colReturn.m_axis.y*colReturn.m_distance),(colReturn.m_axis.z*colReturn.m_distance));
+			objects[0]->setPosition(objects[0]->getPosition() + v);
+			((MovingObject*)objects[0])->setVelocity(Ogre::Vector3(1,0,1)*((MovingObject*)objects[0])->getVelocity());
+			*/
+						}
+					}
+				}
+			}
+		}
 	}
 	//CollisionManager::CheckCollision(objects[0],objects[1]);
 
-
-	if(mCamera->getPosition().y != objects[0]->getNode()->getPosition().y + 50)
-	{
-		if(mCamera->getPosition().y < objects[0]->getNode()->getPosition().y + 50)
-			mCamera->setPosition(mCamera->getPosition().x, mCamera->getPosition().y + 0.1, mCamera->getPosition().z);
-		else
-			mCamera->setPosition(mCamera->getPosition().x, mCamera->getPosition().y - 0.1, mCamera->getPosition().z);
-	}
-
-	mCamera->setPosition(objects[0]->getNode()->getPosition().x, mCamera->getPosition().y, objects[0]->getNode()->getPosition().z +100);
-	mCamera->lookAt(objects[0]->getNode()->getPosition());
+	
+	Camera::getCam()->Update();
+	//mCamera->setPosition(objects[0]->getNode()->getPosition().x, mCamera->getPosition().y, objects[0]->getNode()->getPosition().z +100);
+	//mCamera->lookAt(objects[0]->getNode()->getPosition());
 	/*
 	if(CollisionManager.CheckCollision(*objects[0],*objects[1]))
 	{
@@ -398,7 +431,7 @@ bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
         mShutDown = true;
     }
 
-    mCameraMan->injectKeyDown(arg);
+    //mCameraMan->injectKeyDown(arg);
     return true;
 }
 
